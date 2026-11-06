@@ -31,3 +31,10 @@ Se preferir garantia total, o plano Pro do Supabase não pausa nunca (é pago).
 
 ## Como funciona o selo automático
 O cliente marca o horário pelo site e ele fica reservado na hora. No painel (`/admin.html`), o barbeiro toca em **Concluído** quando o cliente sai da cadeira, e o selo entra sozinho no cartão daquele WhatsApp. Se tocar por engano, **Desfazer** devolve o selo. Marcar **Faltou** ou **Cancelar** não dá selo.
+
+## Segurança
+- **Preço, duração, barbeiro e horário são conferidos no banco** (`seguranca.sql`, que também está no fim do `supabase.sql`). Mudar valores pelo navegador não adianta. Se mudar preços ou horários no `config.js`, mude também em `catalogo_servico` e `horario_funcionamento` e rode o SQL de novo.
+- **Ninguém de fora lê a agenda nem os clientes.** As tabelas só abrem para o e-mail cadastrado em `admins`, logado no painel.
+- **Anti-spam:** no máximo 3 horários em aberto por WhatsApp e 20 pedidos a cada 10 minutos no site todo.
+- **Cabeçalhos de segurança** no `vercel.json` (CSP, HSTS, bloqueio de iframe) e o script do Supabase com verificação de integridade (SRI).
+- **Senha do painel:** em `/admin.html`, escreva o e-mail e toque em **Criar ou trocar senha**. Chega um link por e-mail para definir a senha (mínimo 10 caracteres).

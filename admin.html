@@ -61,7 +61,17 @@
     <input id="email" type="email" autocomplete="username" placeholder="E-mail">
     <input id="senha" type="password" autocomplete="current-password" placeholder="Senha">
     <button class="btn" type="submit">Entrar</button>
+    <button class="btn ghost" type="button" id="forgot">Criar ou trocar senha</button>
     <p class="err" id="loginErr"></p>
+  </form>
+
+  <form class="login" id="pwForm" hidden novalidate>
+    <p class="eyebrow">Área do barbeiro</p>
+    <h1>Nova senha</h1>
+    <input id="novaSenha" type="password" autocomplete="new-password" placeholder="Nova senha (mínimo 10 caracteres)">
+    <input id="novaSenha2" type="password" autocomplete="new-password" placeholder="Repita a senha">
+    <button class="btn" type="submit">Salvar senha</button>
+    <p class="err" id="pwErr"></p>
   </form>
 
   <div id="app" hidden>
@@ -103,7 +113,7 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

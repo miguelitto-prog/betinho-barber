@@ -187,6 +187,10 @@
     horario_ocupado: "Esse horário acabou de ser reservado por outra pessoa. Escolha outro.",
     horario_passado: "Esse horário já passou. Escolha outro.",
     muitos_agendamentos: "Esse WhatsApp já tem 3 horários marcados. Fale com a barbearia para marcar mais.",
+    fora_do_expediente: "Esse horário está fora do expediente. Escolha outro.",
+    telefone_invalido: "Confira o WhatsApp: DDD + número.",
+    nome_invalido: "Escreva seu nome.",
+    muitos_pedidos: "Muitos pedidos agora. Espere uns minutos ou chame no WhatsApp.",
   };
 
   async function confirm() {
@@ -200,7 +204,7 @@
     if (error) {
       const key = Object.keys(ERRORS).find(k => (error.message || "").includes(k));
       st.error = key ? ERRORS[key] : "Não deu para reservar agora. Tente de novo ou chame no WhatsApp.";
-      if (key === "horario_ocupado" || key === "horario_passado") { st.step = 2; st.time = null; loadBusy(); return; }
+      if (key === "horario_ocupado" || key === "horario_passado" || key === "fora_do_expediente") { st.step = 2; st.time = null; loadBusy(); return; }
       render(); return;
     }
     st.doneId = data; render();

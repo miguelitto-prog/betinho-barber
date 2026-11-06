@@ -1,5 +1,7 @@
 (function () {
   const C = window.CONFIG;
+  // link de convite ou de troca de senha chega com type=invite/recovery no endereço
+  const linkTipo = (location.hash.match(/type=(invite|recovery)/) || [])[1];
   const sb = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
   const $ = id => document.getElementById(id);
   const pad = n => String(n).padStart(2, "0");
@@ -19,11 +21,16 @@
   // ---------- login ----------
   async function boot() {
     const { data: { session } } = await sb.auth.getSession();
+    if (session && linkTipo) {
+      $("loginForm").hidden = true; $("app").hidden = true; $("pwForm").hidden = false;
+      history.replaceState(null, "", location.pathname);
+      return;
+    }
     if (!session) { $("loginForm").hidden = false; $("app").hidden = true; $("logout").hidden = true; return; }
     const { data: ok } = await sb.rpc("eh_admin");
     if (!ok) {
       await sb.auth.signOut();
-      $("loginForm").hidden = false; $("loginErr").textContent = "Esse e-mail não tem acesso ao painel.";
+      $("loginForm").hidden = false; $("app").hidden = true; $("loginErr").textContent = "Esse e-mail não tem acesso ao painel.";
       return;
     }
     $("loginForm").hidden = true; $("app").hidden = false; $("logout").hidden = false;
@@ -35,6 +42,23 @@
     if (error) { $("loginErr").textContent = "E-mail ou senha incorretos."; return; }
     $("loginErr").textContent = ""; boot();
   });
+  $("forgot").addEventListener("click", async () => {
+    const email = $("email").value.trim();
+    if (!email) { $("loginErr").textContent = "Escreva seu e-mail acima e toque de novo."; return; }
+    await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + "/admin.html" });
+    $("loginErr").textContent = "Se esse e-mail tiver acesso, chega um link para criar a senha.";
+  });
+  $("pwForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const a = $("novaSenha").value, b = $("novaSenha2").value;
+    if (a.length < 10) { $("pwErr").textContent = "Use pelo menos 10 caracteres."; return; }
+    if (a !== b) { $("pwErr").textContent = "As senhas não são iguais."; return; }
+    $("pwErr").textContent = "Salvando…";
+    const { error } = await sb.auth.updateUser({ password: a });
+    if (error) { $("pwErr").textContent = "Não salvou. Abra o link do e-mail de novo."; return; }
+    $("pwForm").hidden = true; $("pwErr").textContent = ""; boot();
+  });
+  sb.auth.onAuthStateChange(ev => { if (ev === "PASSWORD_RECOVERY") { $("loginForm").hidden = true; $("pwForm").hidden = false; } });
   $("logout").addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
 
   // ---------- abas ----------
