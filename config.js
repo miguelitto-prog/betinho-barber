@@ -4,8 +4,8 @@
 
 // Supabase > Project Settings > API
 (typeof window !== "undefined" ? window : globalThis).CONFIG = {
-  SUPABASE_URL: "https://SEU-PROJETO.supabase.co",
-  SUPABASE_ANON_KEY: "COLE-AQUI-A-CHAVE-anon-public",
+  SUPABASE_URL: "https://iwdqemgpedpumkvxudqw.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_bRlEwxx9BoL8mXqQci8evg_iEQd2VIq",
 
   // WhatsApp da barbearia: 55 + DDD + número, só dígitos
   WHATSAPP: "5524999999999",
