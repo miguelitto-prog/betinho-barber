@@ -39,6 +39,15 @@
   .pill.concluido{color:var(--ok);border-color:#3d5a3a}
   .pill.faltou,.pill.cancelado{color:#e28a7e;border-color:#6b2f28}
   .bk.dim{opacity:.55}
+  .prox{background:var(--leather-2);border:1px solid var(--brass);border-radius:14px;padding:16px;margin-bottom:28px}
+  .prox h2,.dia-h{font-family:var(--f-display);font-weight:800;font-size:24px;text-transform:uppercase;margin:0 0 10px}
+  .prox-list{display:grid;gap:6px}
+  .prox-list .empty{padding:6px 0}
+  .px{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--leather);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--bone);font:inherit;cursor:pointer}
+  .px:hover{border-color:var(--brass)}
+  .px .q{font-family:var(--f-mono);font-size:13px;color:var(--brass);white-space:nowrap}
+  .px .w{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .px .w small{color:var(--muted)}
   .acts a.mini{display:inline-flex;align-items:center;justify-content:center}
   .empty{color:var(--muted);padding:24px 0}
   .tbl{overflow-x:auto}
@@ -87,6 +96,11 @@
     </div>
 
     <section id="tab-agenda" style="padding:0">
+      <div class="prox">
+        <h2>Próximos agendamentos <span id="proxCount" class="pill pendente" hidden></span></h2>
+        <div id="proximos" class="prox-list"><p class="empty">Carregando…</p></div>
+      </div>
+      <h2 class="dia-h">Agenda por dia</h2>
       <div class="tools">
         <div class="daynav">
           <button class="mini" type="button" id="prevDay" aria-label="Dia anterior">←</button>

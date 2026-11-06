@@ -34,7 +34,8 @@
       return;
     }
     $("loginForm").hidden = true; $("app").hidden = false; $("logout").hidden = false;
-    loadDay(); loadClients();
+    loadDay(); loadClients(); loadNext();
+    clearInterval(boot._t); boot._t = setInterval(() => { loadNext(); loadDay(); }, 60000);
   }
   $("loginForm").addEventListener("submit", async e => {
     e.preventDefault(); $("loginErr").textContent = "Entrando…";
@@ -74,7 +75,7 @@
   $("prevDay").onclick = () => { const d = new Date(day); d.setDate(d.getDate() - 1); setDay(d); };
   $("nextDay").onclick = () => { const d = new Date(day); d.setDate(d.getDate() + 1); setDay(d); };
   $("todayBtn").onclick = () => { const d = new Date(); d.setHours(0, 0, 0, 0); setDay(d); };
-  $("reload").onclick = () => loadDay();
+  $("reload").onclick = () => { loadDay(); loadNext(); };
 
   async function loadDay() {
     const isToday = day.toDateString() === new Date().toDateString();
@@ -114,13 +115,37 @@
     });
   }
 
+  // ---------- próximos agendamentos (de agora em diante) ----------
+  async function loadNext() {
+    const { data, error } = await sb.from("agendamentos").select("id,inicio,nome,servico,status")
+      .gte("inicio", new Date(Date.now() - 60 * 60000).toISOString())
+      .in("status", ["pendente", "confirmado"]).order("inicio").limit(50);
+    const box = $("proximos"), cnt = $("proxCount");
+    if (error) { box.innerHTML = `<p class="empty">Não deu para carregar. Toque em Atualizar.</p>`; return; }
+    const pend = data.filter(b => b.status === "pendente").length;
+    cnt.hidden = !pend; cnt.textContent = pend + (pend === 1 ? " novo" : " novos");
+    if (!data.length) { box.innerHTML = `<p class="empty">Nenhum horário marcado daqui pra frente.</p>`; return; }
+    box.innerHTML = "";
+    data.forEach(b => {
+      const t = new Date(b.inicio);
+      const el = document.createElement("button");
+      el.type = "button"; el.className = "px";
+      el.innerHTML = `<span class="q"></span><span class="w"><strong></strong> <small></small></span><span class="pill ${b.status}">${LABEL[b.status]}</span>`;
+      el.querySelector(".q").textContent = `${DOW[t.getDay()].slice(0, 3)} ${pad(t.getDate())}/${pad(t.getMonth() + 1)} · ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+      el.querySelector("strong").textContent = b.nome;
+      el.querySelector("small").textContent = "· " + b.servico;
+      el.onclick = () => { const d = new Date(t); d.setHours(0, 0, 0, 0); setDay(d); $("dayLabel").scrollIntoView({ behavior: "smooth", block: "start" }); };
+      box.appendChild(el);
+    });
+  }
+
   async function setStatus(b, status, btn) {
     btn.disabled = true;
     const { error } = await sb.rpc("mudar_status", { p_id: b.id, p_status: status });
     if (error) { btn.disabled = false; toast("Não salvou. Tente de novo."); return; }
     if (status === "concluido") toast(`Selo lançado no cartão de ${b.nome.split(" ")[0]}`);
     else if (b.status === "concluido") toast("Selo devolvido");
-    loadDay();
+    loadDay(); loadNext();
   }
 
   // ---------- clientes ----------
