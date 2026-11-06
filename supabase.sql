@@ -233,7 +233,8 @@ begin
   -- serviço e barbeiro só da lista oficial; preço e duração vêm do servidor
   select c.preco, c.duracao into v_preco, v_dur from public.catalogo_servico(p_servico) c;
   if v_preco is null then raise exception 'servico_invalido'; end if;
-  if p_barbeiro not in ('Betinho', 'Primeiro disponível') then raise exception 'barbeiro_invalido'; end if;
+  -- 'Primeiro disponível' fica bloqueado por enquanto
+  if p_barbeiro not in ('Betinho') then raise exception 'barbeiro_invalido'; end if;
   v_fim := p_inicio + make_interval(mins => v_dur);
 
   if v_tel ~ '^55[0-9]{10,11}$' then v_tel := substr(v_tel, 3); end if;
@@ -243,8 +244,8 @@ begin
   if p_inicio < now() then raise exception 'horario_passado'; end if;
   if p_inicio > now() + interval '60 days' then raise exception 'horario_distante'; end if;
 
-  -- agenda aberta todos os dias das 06:00 às 23:00 (inclusive fora do expediente), em horários cheios ou meia hora
-  if extract(minute from v_local)::int not in (0, 30)
+  -- agenda aberta todos os dias das 06:00 às 23:00 (inclusive fora do expediente), só em horas cheias
+  if extract(minute from v_local)::int <> 0
      or extract(second from v_local) <> 0
      or v_local::time < time '06:00'
      or (v_local + make_interval(mins => v_dur)) > (v_local::date + time '23:00') then

@@ -108,7 +108,7 @@
   function slotsFor(day) {
     const h = C.AGENDA; // agenda aberta todos os dias, inclusive fora do expediente
     const dur = svcOf().min / 60, out = [], nowMs = Date.now() + 30 * 60000;
-    for (let x = h[0]; x + dur <= h[1] + 1e-9; x += 0.5) {
+    for (let x = h[0]; x + dur <= h[1] + 1e-9; x += 1) {
       const s = startAt(day, x).getTime(), e = s + svcOf().min * 60000;
       const taken = (st.busy || []).some(([bs, be]) => bs < e && be > s);
       out.push({ h: x, off: taken || s <= nowMs });
@@ -139,7 +139,9 @@
         <strong>${esc(s.name)}</strong><small>${brl(s.price)} · ${s.min} min</small></button>`).join("")}</div>`;
     } else if (st.step === 1) {
       html = `<h3>Com quem?</h3><p class="hint">${esc(svc.name)} · ${brl(svc.price)}</p>
-      <div class="opts">${C.BARBERS.map(b => `<button class="opt" type="button" data-bar="${esc(b.id)}" aria-pressed="${st.barber === b.id}">
+      <div class="opts">${C.BARBERS.map(b => b.ativo === false
+        ? `<button class="opt" type="button" disabled aria-disabled="true"><strong>${esc(b.id)}</strong><small>Em breve</small></button>`
+        : `<button class="opt" type="button" data-bar="${esc(b.id)}" aria-pressed="${st.barber === b.id}">
         <strong>${esc(b.id)}</strong><small>${esc(b.note)}</small></button>`).join("")}</div>`;
     } else if (st.step === 2) {
       const days = nextDays();

@@ -223,3 +223,5 @@ img,svg{max-width:100%}
   .slots{grid-template-columns:repeat(3,1fr)}
   .mark i{display:none}
 }
+.opt:disabled{opacity:.45;cursor:not-allowed;border-style:dashed}
+.opt:disabled small{color:var(--brass)}

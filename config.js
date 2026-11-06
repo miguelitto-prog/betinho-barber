@@ -28,10 +28,10 @@
 
   BARBERS: [
     { id: "Betinho",             note: "Dono da casa" },
-    { id: "Primeiro disponível", note: "Mais opções de horário" },
+    { id: "Primeiro disponível", note: "Mais opções de horário", ativo: false }, // ativo: false = aparece como "Em breve"
   ],
 
-  // Horários que o cliente pode marcar, todos os dias (inclusive fora do expediente): [primeira, última hora]
+  // Horários que o cliente pode marcar (só horas cheias), todos os dias (inclusive fora do expediente): [primeira, última hora]
   AGENDA: [6, 23],
 
   // Expediente, só para mostrar "Aberto agora" e a tabela de horários
