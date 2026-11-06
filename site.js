@@ -106,7 +106,7 @@
     render();
   }
   function slotsFor(day) {
-    const h = C.HOURS[day.getDay()]; if (!h) return [];
+    const h = C.AGENDA; // agenda aberta todos os dias, inclusive fora do expediente
     const dur = svcOf().min / 60, out = [], nowMs = Date.now() + 30 * 60000;
     for (let x = h[0]; x + dur <= h[1] + 1e-9; x += 0.5) {
       const s = startAt(day, x).getTime(), e = s + svcOf().min * 60000;
@@ -144,7 +144,7 @@
       const slots = st.busy === null ? null : slotsFor(st.day);
       html = `<h3>Dia e hora</h3><p class="hint">Horários riscados já estão ocupados.</p>
       <div class="days">${days.map(d => {
-        const closed = !C.HOURS[d.getDay()];
+        const closed = false;
         return `<button class="day" type="button" data-day="${dayKey(d)}" aria-pressed="${dayKey(d) === dayKey(st.day)}" ${closed ? "disabled" : ""}>
         <span>${DOW[d.getDay()].slice(0, 3)}</span><strong>${d.getDate()}</strong><span>${d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")}</span></button>`;
       }).join("")}</div>
@@ -187,7 +187,7 @@
     horario_ocupado: "Esse horário acabou de ser reservado por outra pessoa. Escolha outro.",
     horario_passado: "Esse horário já passou. Escolha outro.",
     muitos_agendamentos: "Esse WhatsApp já tem 3 horários marcados. Fale com a barbearia para marcar mais.",
-    fora_do_expediente: "Esse horário está fora do expediente. Escolha outro.",
+    fora_do_expediente: "Esse horário não está disponível. Escolha outro.",
     telefone_invalido: "Confira o WhatsApp: DDD + número.",
     nome_invalido: "Escreva seu nome.",
     muitos_pedidos: "Muitos pedidos agora. Espere uns minutos ou chame no WhatsApp.",
@@ -229,7 +229,7 @@
       st.step++;
       if (st.step === 2) {
         if (!st.day) st.day = nextDays().find(d => {
-          const h = C.HOURS[d.getDay()]; if (!h) return false;
+          const h = C.AGENDA;
           return d.toDateString() !== new Date().toDateString() || new Date().getHours() + new Date().getMinutes() / 60 < h[1] - 1;
         }) || nextDays()[1];
         loadBusy();

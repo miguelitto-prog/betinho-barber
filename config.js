@@ -31,6 +31,10 @@
     { id: "Primeiro disponível", note: "Mais opções de horário" },
   ],
 
+  // Horários que o cliente pode marcar, todos os dias (inclusive fora do expediente): [primeira, última hora]
+  AGENDA: [6, 23],
+
+  // Expediente, só para mostrar "Aberto agora" e a tabela de horários
   // 0 = domingo ... 6 = sábado → [abre, fecha] em horas, ou null se fechado
   HOURS: { 0: null, 1: [9, 19], 2: [9, 19], 3: [9, 19], 4: [9, 19], 5: [9, 19], 6: [8, 17] },
 };

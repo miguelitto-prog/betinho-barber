@@ -38,7 +38,6 @@ declare
   v_dur int;
   v_fim timestamptz;
   v_local timestamp := p_inicio at time zone 'America/Sao_Paulo';
-  v_abre int; v_fecha int;
   v_nome text := left(trim(regexp_replace(coalesce(p_nome,''), '[[:cntrl:]<>]', '', 'g')), 80);
   v_tel text := regexp_replace(coalesce(p_telefone,''), '\D', '', 'g');
 begin
@@ -55,14 +54,11 @@ begin
   if p_inicio < now() then raise exception 'horario_passado'; end if;
   if p_inicio > now() + interval '60 days' then raise exception 'horario_distante'; end if;
 
-  -- só dentro do expediente, em horários cheios ou meia hora
-  select h.abre, h.fecha into v_abre, v_fecha from public.horario_funcionamento(extract(dow from v_local)::int) h;
-  if v_abre is null
-     or extract(minute from v_local)::int not in (0, 30)
+  -- agenda aberta todos os dias das 06:00 às 23:00 (inclusive fora do expediente), em horários cheios ou meia hora
+  if extract(minute from v_local)::int not in (0, 30)
      or extract(second from v_local) <> 0
-     or v_local::time < make_time(v_abre, 0, 0)
-     or (v_local + make_interval(mins => v_dur))::time > make_time(v_fecha, 0, 0)
-     or (v_local + make_interval(mins => v_dur))::date <> v_local::date then
+     or v_local::time < time '06:00'
+     or (v_local + make_interval(mins => v_dur)) > (v_local::date + time '23:00') then
     raise exception 'fora_do_expediente';
   end if;
 
