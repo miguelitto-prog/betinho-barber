@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Betinho Barber Style</title>
+<meta name="description" content="Barbearia Betinho Barber Style. Veja os preços, marque seu horário online e acompanhe seu cartão fidelidade.">
+<meta property="og:title" content="Betinho Barber Style">
+<meta property="og:description" content="Marque seu horário online. A cada 10 atendimentos, 1 corte grátis.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+  html,body{margin:0}
+  .done-box{background:var(--leather);border:1px solid var(--line);border-radius:14px;padding:24px;max-width:560px}
+  .done-box h3{color:var(--brass)}
+  .slot-loading{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#inicio">BETINHO<i>Barber Style</i></a>
+    <nav class="links" aria-label="Seções">
+      <a href="#servicos">Serviços</a>
+      <a href="#fidelidade">Fidelidade</a>
+      <a href="#agendar">Agendar</a>
+      <a href="#local">Horário e local</a>
+    </nav>
+    <a class="btn" href="#agendar">Agendar</a>
+  </div>
+</header>
+
+<main id="inicio">
+  <div class="hero">
+    <div class="wrap">
+      <h1 class="word">Betinho<span class="script">Barber Style</span></h1>
+      <div>
+        <p class="eyebrow">Barbearia · corte, barba e acabamento</p>
+        <p class="lead">Corte na tesoura e na máquina, barba com toalha quente e navalha. Escolha o horário aqui e chegue só na hora.</p>
+        <div class="ctas">
+          <a class="btn" href="#agendar">Reservar horário</a>
+          <a class="btn ghost" href="#servicos">Ver preços</a>
+        </div>
+        <div class="today" aria-live="polite">
+          <span id="openNow"><span class="dot"></span>Aberto agora</span>
+          <span id="todayHours"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pole" aria-hidden="true"></div>
+
+  <section id="servicos">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Tabela de <em>preços</em></h2>
+        <p>Valores e tempos de cada serviço. O tempo já conta lavagem e finalização.</p>
+      </div>
+      <div class="board" id="board"></div>
+      <p class="note">Pagamento em Pix, dinheiro ou cartão.</p>
+    </div>
+  </section>
+
+  <section id="fidelidade">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Cartão <em>fidelidade</em></h2>
+        <p>Cada atendimento concluído vale um selo, lançado automaticamente no seu cartão.</p>
+      </div>
+      <div class="fid">
+        <div>
+          <p class="rule" id="ruleText"></p>
+          <p>Não precisa baixar app nem guardar papel. Seu cartão fica ligado ao seu WhatsApp e é criado no primeiro atendimento.</p>
+          <form class="lookup" id="lookupForm" novalidate>
+            <label for="lk-phone" class="eyebrow" style="flex-basis:100%">Seu WhatsApp</label>
+            <input id="lk-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(24) 9 9999-9999">
+            <button class="btn" type="submit">Ver meu cartão</button>
+          </form>
+          <p class="status" id="lkStatus"></p>
+        </div>
+        <div id="cardSlot"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="agendar">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Marque seu <em>horário</em></h2>
+        <p>Sem cadastro e sem login. Leva menos de um minuto.</p>
+      </div>
+      <div class="ticket">
+        <ol class="steps" id="steps">
+          <li><b>1</b>Serviço</li>
+          <li><b>2</b>Barbeiro</li>
+          <li><b>3</b>Dia e hora</li>
+          <li><b>4</b>Seus dados</li>
+          <li><b>5</b>Confirmar</li>
+        </ol>
+        <div class="panel" id="panel"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="local">
+    <div class="wrap">
+      <div class="sec-head"><h2>Horário e <em>local</em></h2></div>
+      <div class="info">
+        <div>
+          <h3>Funcionamento</h3>
+          <table class="hours" id="hours"></table>
+        </div>
+        <div>
+          <h3>Endereço</h3>
+          <p class="big" id="endereco"></p>
+          <p id="cidade"></p>
+          <a class="btn ghost" id="mapsLink" href="#" target="_blank" rel="noopener">Abrir no Google Maps</a>
+        </div>
+        <div>
+          <h3>Contato</h3>
+          <p class="big"><span id="zapText"></span><button class="copy" id="copyZap" type="button">copiar</button></p>
+          <p>WhatsApp para dúvidas e remarcações.</p>
+          <a class="btn ghost" id="zapLink" href="#" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <p style="margin-top:16px"><a id="instaLink" href="#" target="_blank" rel="noopener">Instagram</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Betinho Barber Style</span>
+    <a href="admin.html" style="text-decoration:none">Área do barbeiro</a>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
