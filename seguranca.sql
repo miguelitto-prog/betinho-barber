@@ -98,3 +98,21 @@ grant execute on function public.criar_agendamento(text, numeric, int, text, tim
 
 -- Tabelas: ninguém de fora lê nem escreve direto
 revoke all on public.agendamentos, public.cartoes, public.admins from anon;
+
+-- ---------- confirmação automática pelo WhatsApp ----------
+alter table public.agendamentos add column if not exists whatsapp_enviado boolean not null default false;
+
+-- Entrega os dados do agendamento UMA vez, e só nos 10 minutos depois de marcado.
+-- Quem chama é a função /api/whatsapp da Vercel, que manda a mensagem.
+create or replace function public.whatsapp_pendente(p_id uuid)
+returns table (nome text, telefone text, servico text, inicio timestamptz)
+language sql volatile security definer set search_path = public as $$
+  update public.agendamentos a
+     set whatsapp_enviado = true
+   where a.id = p_id
+     and not a.whatsapp_enviado
+     and a.criado_em > now() - interval '10 minutes'
+  returning a.nome, a.telefone, a.servico, a.inicio
+$$;
+revoke all on function public.whatsapp_pendente(uuid) from public;
+grant execute on function public.whatsapp_pendente(uuid) to anon, authenticated;

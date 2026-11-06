@@ -45,7 +45,7 @@
   $("forgot").addEventListener("click", async () => {
     const email = $("email").value.trim();
     if (!email) { $("loginErr").textContent = "Escreva seu e-mail acima e toque de novo."; return; }
-    await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + "/admin.html" });
+    await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
     $("loginErr").textContent = "Se esse e-mail tiver acesso, chega um link para criar a senha.";
   });
   $("pwForm").addEventListener("submit", async e => {

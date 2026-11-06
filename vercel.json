@@ -14,7 +14,7 @@
       ]
     },
     {
-      "source": "/admin(.html)?",
+      "source": "/painel-48b577d8(.html)?",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" },
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" }

@@ -118,6 +118,8 @@
 
   function render() {
     stepsEl.forEach((li, i) => { li.className = st.doneId ? "done" : i === st.step ? "on" : i < st.step ? "done" : ""; });
+    const onStep = stepsEl[st.step], bar = stepsEl[0] && stepsEl[0].parentElement;
+    if (onStep && bar && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = onStep.offsetLeft - bar.offsetLeft - 16;
     const svc = svcOf();
     let html = "";
     if (st.doneId) {
@@ -125,7 +127,7 @@
       const msg = `Olá! Acabei de marcar pelo site: ${svc.name}, ${DOW[d.getDay()]} ${d.toLocaleDateString("pt-BR")} às ${fmtH(st.time)}. Nome: ${st.name}.`;
       html = `<div class="done-box"><h3>Pedido enviado</h3>
         <p class="hint">${esc(svc.name)} · ${DOW[d.getDay()]}, ${d.toLocaleDateString("pt-BR")} às ${fmtH(st.time)}.<br>
-        O horário já está reservado. O Betinho confirma pelo WhatsApp ${esc(pretty(digits(st.phone)))}.</p>
+        O horário já está reservado. A confirmação chega no WhatsApp ${esc(pretty(digits(st.phone)))}.</p>
         <p class="small">Quando o atendimento for concluído, o selo entra sozinho no seu cartão fidelidade.</p>
         <div class="nav-row"><a class="btn ghost" href="https://wa.me/${C.WHATSAPP}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Avisar no WhatsApp</a>
         <button class="btn" type="button" id="restart">Marcar outro</button></div></div>`;
@@ -208,6 +210,8 @@
       render(); return;
     }
     st.doneId = data; render();
+    // confirmação automática no WhatsApp do cliente (feita no servidor da Vercel)
+    fetch("/api/whatsapp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: data }), keepalive: true }).catch(() => {});
   }
 
   panel.addEventListener("click", e => {
